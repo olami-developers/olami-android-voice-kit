@@ -1,4 +1,3 @@
-https://github.com/cepr/android-serialport-api  
-  
-  
-http://www.jianshu.com/p/0784ccfaa9c6
+# Android sample code for VT6751
+
+- [Download Hardware Documentation](https://drive.google.com/open?id=1Ly2GzgxP3YmPaA6NHZTpx_Zyb-iOuTZD)

@@ -1,1 +1,1 @@
-OLAMI Android Utility Service
+# OLAMI Android Utility Service for Voice Kit
