@@ -1,0 +1,133 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        archivesBaseName = "olami-android-vt6751-tool"
+        version = android.defaultConfig.versionName
+
+        ndk{
+            moduleName "serial_port"
+            abiFilters 'x86', 'x86_64', 'armeabi', 'armeabi-v7a', 'arm64-v8a'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path 'src/main/jni/CMakeLists.txt'
+        }
+    }
+
+    android.libraryVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.aar')) {
+                def fileName = "${archivesBaseName}-${version}.aar"
+                output.outputFile = new File(outputFile.parent, fileName)
+            }
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:26.+'
+    testCompile 'junit:junit:4.12'
+}
+
+// Copy output files to '/bin' after build --------------------------
+def binRoot = '../bin'
+def aarBaseName = "${archivesBaseName}-${version}"
+def aarOutFilePath = "build/outputs/aar/${aarBaseName}.aar"
+def aarModulePath = "../${aarBaseName}"
+def aarTempPath = "${binRoot}/.lib_aar_temp"
+def libsListPath = "${binRoot}/list-of-dependencies"
+def javadocTempPath = "${binRoot}/.javadoc"
+
+task copyOutputFiles << {
+    delete aarTempPath
+    delete libsListPath
+    // Copy simple aar to bin path
+    copy {
+        from aarOutFilePath
+        into binRoot
+    }
+    // Copy aar file to the lib list folder
+    copy {
+        from aarOutFilePath
+        into libsListPath
+    }
+    // Unzip aar file to be the source for the new full-packed aar file
+    copy {
+        from zipTree(new File(aarOutFilePath))
+        into aarTempPath
+    }
+    // Copy dependencies for the new full-packed aar file
+    copy {
+        from configurations.compile
+        into "${aarTempPath}/libs"
+    }
+    // opy dependencies to the lib list folder
+    copy {
+        from configurations.compile
+        into libsListPath
+    }
+}
+
+task packFullAAR(type:Zip) {
+    dependsOn copyOutputFiles
+    // Packing with all dependencies for the new aar file
+    from aarTempPath
+    include '*'
+    include '**/*'
+    archiveName "${aarBaseName}-full.aar"
+    destinationDir(file(binRoot))
+}
+
+task createFullJavaDoc(type:Javadoc) {
+    dependsOn packFullAAR
+    options.encoding = 'UTF-8'
+    options.addStringOption('Xdoclint:none', '-quiet')
+    title archivesBaseName
+    destinationDir(file(javadocTempPath))
+    source = android.sourceSets.main.java.srcDirs
+//    source configurations.doc.collect { zipTree(it) } // source 'compile' olami other libraries
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    classpath += project.files(android.sourceSets.main.java.srcDirs) // reference other ignored internal classes
+    classpath += configurations.compile
+    include 'ai/olami/**/*.java'
+    failOnError false
+}
+
+task packFullJavadoc(type:Jar) {
+    dependsOn createFullJavaDoc
+    from javadocTempPath
+    archiveName "${aarBaseName}-javadoc.jar"
+    destinationDir(file(binRoot))
+}
+
+task cleanAndRebuildBinFiles(type:Delete) {
+    dependsOn packFullJavadoc
+    delete aarTempPath
+    delete javadocTempPath
+}
+
+build.finalizedBy(cleanAndRebuildBinFiles)
+// ------------------------------------------------------------------

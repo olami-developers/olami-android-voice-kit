@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+oneshot代表著是否只展示一遍，設置為false會不停的循環播放動畫
+android:duration 表示展示所用的該圖片的時間長度
+-->
+<animation-list
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false"
+    >
+    <item android:drawable="@mipmap/booting_1" android:duration="80"></item>
+    <item android:drawable="@mipmap/booting_5" android:duration="80"></item>
+    <item android:drawable="@mipmap/booting_9" android:duration="80"></item>
+    <item android:drawable="@mipmap/booting_13" android:duration="80"></item>
+    <item android:drawable="@mipmap/booting_17" android:duration="80"></item>
+    <item android:drawable="@mipmap/booting_21" android:duration="80"></item>
+    <item android:drawable="@mipmap/booting_25" android:duration="80"></item>
+    <item android:drawable="@mipmap/booting_29" android:duration="80"></item>
+    <item android:drawable="@mipmap/booting_33" android:duration="80"></item>
+    <item android:drawable="@mipmap/booting_37" android:duration="80"></item>
+    <item android:drawable="@mipmap/booting_41" android:duration="80"></item>
+    <item android:drawable="@mipmap/booting_45" android:duration="80"></item>
+    <item android:drawable="@mipmap/booting_49" android:duration="80"></item>
+    <item android:drawable="@mipmap/booting_53" android:duration="80"></item>
+    <item android:drawable="@mipmap/booting_57" android:duration="80"></item>
+</animation-list>

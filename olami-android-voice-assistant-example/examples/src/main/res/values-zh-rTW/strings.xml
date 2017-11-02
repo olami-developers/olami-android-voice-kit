@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OLAMI 語音智慧喇叭範例程式</string>
+    <string name="GetMicrophonePermissionDenied">取得麥克風權限失敗</string>
+    <string name="GetMicrophonePermission">取得麥克風權限成功</string>
+    <string name="GetWriteStoragePermission">取得寫入外部裝置權限成功</string>
+    <string name="GetWriteStoragePermissionDenied">取得寫入外部裝置權限失敗</string>
+    <string name="HelloIAmOlami">你好！我是歐拉蜜</string>
+    <string name="hello">哈囉</string>
+    <string name="WhatCanOLAMIDo">你可以問我：台北的天氣、說個笑話、紅燒肉怎麼做、郭台銘的簡介、我要聽長恨歌、講個故事、2乘4等於幾、0.2公尺是多少公分等內容</string>
+    <string name="canIHelpYou">有什麼我可以幫忙的嗎.....</string>
+    <string name="GetAppKeyFail">您尚未設定開發者金鑰</string>
+    <string name="OlamiGoToSleep">歐拉蜜要去睡覺了，擺擺</string>
+    <string name="HowToWakeUp">歐拉蜜已經去睡覺了，按 Button D 叫醒我</string>
+    <string name="HowCanIHelpYou">我是歐拉蜜，請問我可以幫你做什麼</string>
+    <string name="SayAgain">你一個字都沒說，你可以在說一次嗎</string>
+    <string name="NetworkError">網路環境異常，請重新確認網路環境</string>
+    <string name="ConnectNetworkError">無法連接網路，請重新確認網路環境</string>
+    <string name="OlamiIsInitializing">歐拉蜜正在初始化，請稍後歐拉蜜正在初始化，請稍後</string>
+</resources>

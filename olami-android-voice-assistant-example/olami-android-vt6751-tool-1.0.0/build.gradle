@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('olami-android-vt6751-tool-1.0.0.aar'))

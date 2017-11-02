@@ -1,0 +1,81 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
+
+    defaultConfig {
+        applicationId "ai.olami.android.sample.voiceAssistant"
+        minSdkVersion 21
+        targetSdkVersion 25
+        versionCode 1
+        versionName "20170707"
+
+        archivesBaseName = "olami-android-voice-assistant-examples"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        sign {
+            storeFile file('../olami-apk-test-key')
+            storePassword 'http://olami.ai'
+            keyAlias 'olami-apk-test-key'
+            keyPassword 'olami.ai'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.sign
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                def fileName = "${archivesBaseName}.apk"
+                output.outputFile = new File(outputFile.parent, fileName)
+            }
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+    compile 'com.android.support:appcompat-v7:25.3.1'
+
+    compile group: 'commons-net', name: 'commons-net', version: '3.3'
+
+    // * OLAMI HTTP Client SDKs
+    compile 'ai.olami:olami-java-client:1.1.1'
+    compile 'ai.olami:olami-android-client:2.3.0'
+    // * OLAMI SDKs and Voice-Kit libraries
+    compile project(':olami-android-hotword-detect-1.0.0.beta3')
+    compile project(':olami-android-tts-1.0.0.120')
+    // * OLAMI Voice-Kit other libraries
+    compile project(':olami-android-vt6751-tool-1.0.0')
+
+    testCompile 'junit:junit:4.12'
+}
+
+// Copy output files to '/bin' after build --------------
+task copyOutputFiles(type: Copy) {
+    from 'build/outputs/apk'
+    into "../bin"
+    include '*.apk'
+}
+
+build.finalizedBy(copyOutputFiles)
+// ------------------------------------------------------

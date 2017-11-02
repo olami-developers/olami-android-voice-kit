@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+oneshot代表著是否只展示一遍，設置為false會不停的循環播放動畫
+android:duration 表示展示所用的該圖片的時間長度
+-->
+<animation-list
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false"
+    >
+    <item android:drawable="@mipmap/listened_10" android:duration="80"></item>
+    <item android:drawable="@mipmap/listened_9" android:duration="80"></item>
+    <item android:drawable="@mipmap/listened_8" android:duration="80"></item>
+    <item android:drawable="@mipmap/listened_7" android:duration="80"></item>
+    <item android:drawable="@mipmap/listened_6" android:duration="80"></item>
+    <item android:drawable="@mipmap/listened_5" android:duration="80"></item>
+    <item android:drawable="@mipmap/listened_4" android:duration="80"></item>
+    <item android:drawable="@mipmap/listened_3" android:duration="80"></item>
+    <item android:drawable="@mipmap/listened_2" android:duration="80"></item>
+    <item android:drawable="@mipmap/listened_1" android:duration="80"></item>
+</animation-list>

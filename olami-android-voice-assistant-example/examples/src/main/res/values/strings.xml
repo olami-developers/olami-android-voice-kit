@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">OLAMI 语音智能音箱示例程序</string>
+    <string name="GetMicrophonePermissionDenied">取得麦克风权限失败</string>
+    <string name="GetMicrophonePermission">取得麦克风权限成功</string>
+    <string name="GetWriteStoragePermission">取得写入外部装置权限成功</string>
+    <string name="GetWriteStoragePermissionDenied">取得写入外部装置权限失败</string>
+    <string name="HelloIAmOlami">你好！我是欧拉蜜</string>
+    <string name="hello">哈啰</string>
+    <string name="WhatCanOLAMIDo">你可以问我：上海的天气、说个笑话、红烧肉怎么做、姚明的简介、我要听长恨歌、讲个故事、2乘4等于几、0.2千米是多少米等内容</string>
+    <string name="canIHelpYou">有什么我可以帮忙的吗.....</string>
+    <string name="GetAppKeyFail">您尚未设定开发者金钥</string>
+    <string name="OlamiGoToSleep">欧拉蜜要去睡觉了，摆摆</string>
+    <string name="HowToWakeUp">欧拉蜜已经去睡觉了，按 Button D 叫醒我</string>
+    <string name="HowCanIHelpYou">我是欧拉蜜，请问我可以帮你做什么</string>
+    <string name="SayAgain">你一个字都没说，你可以在说一次吗</string>
+    <string name="NetworkError">网路环境异常，请重新确认网路环境</string>
+    <string name="ConnectNetworkError">无法连接网路，请重新确认网路环境</string>
+    <string name="OlamiIsInitializing">欧拉蜜正在初始化，请稍后</string>
+</resources>
