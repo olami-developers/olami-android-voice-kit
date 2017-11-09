@@ -8,63 +8,18 @@ android:duration 表示展示所用的該圖片的時間長度
     android:oneshot="false"
     >
     <item android:drawable="@mipmap/waiting_240" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_236" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_232" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_228" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_224" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_220" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_216" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_212" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_208" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_204" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_200" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_196" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_192" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_188" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_184" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_180" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_176" android:duration="80"></item>
+    <item android:drawable="@mipmap/waiting_223" android:duration="80"></item>
+    <item android:drawable="@mipmap/waiting_206" android:duration="80"></item>
+    <item android:drawable="@mipmap/waiting_189" android:duration="80"></item>
     <item android:drawable="@mipmap/waiting_172" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_168" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_164" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_160" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_156" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_152" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_148" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_144" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_140" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_136" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_132" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_128" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_124" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_120" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_116" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_112" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_108" android:duration="80"></item>
+    <item android:drawable="@mipmap/waiting_155" android:duration="80"></item>
+    <item android:drawable="@mipmap/waiting_138" android:duration="80"></item>
+    <item android:drawable="@mipmap/waiting_121" android:duration="80"></item>
     <item android:drawable="@mipmap/waiting_104" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_100" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_96" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_92" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_88" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_84" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_80" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_76" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_72" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_68" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_64" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_60" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_56" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_52" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_48" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_44" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_40" android:duration="80"></item>
+    <item android:drawable="@mipmap/waiting_87" android:duration="80"></item>
+    <item android:drawable="@mipmap/waiting_70" android:duration="80"></item>
+    <item android:drawable="@mipmap/waiting_53" android:duration="80"></item>
     <item android:drawable="@mipmap/waiting_36" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_32" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_28" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_24" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_20" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_16" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_12" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_8" android:duration="80"></item>
-    <item android:drawable="@mipmap/waiting_4" android:duration="80"></item>
+    <item android:drawable="@mipmap/waiting_19" android:duration="80"></item>
+    <item android:drawable="@mipmap/waiting_2" android:duration="80"></item>
 </animation-list>

@@ -120,6 +120,8 @@ public class VoiceAssistantActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.i(TAG, "checkPermission = "+ checkDeviceResourcePermissions());
+
         //
         // * Tell the DateTimeManagerService to sync NTP time.
         //   --------------------------------------------------------------------------------------
@@ -132,112 +134,6 @@ public class VoiceAssistantActivity extends AppCompatActivity {
         inent.setComponent(new ComponentName("ai.olami.android.util",
                 "ai.olami.android.util.DateTimeManagerService"));
         startService(inent);
-
-        mContext = VoiceAssistantActivity.this;
-
-        // Initial TTS player
-        if (mTtsPlayer == null) {
-            mTtsListener = new TtsPlayerListener();
-            mTtsPlayer = new TtsPlayer(mContext, mTtsListener);
-            mTtsPlayer.setSpeed(1.1f);
-            mTtsPlayer.setVolume(100);
-        }
-
-        // Initial microphone array helper
-        if (mMicArrayLEDControlHelper == null) {
-            try {
-                mMicArrayControlVT6751 = MicArrayControlVT6751.create(
-                        new MicArrayVT6751Listener(),
-                        mContext,
-                        mSerialPortDevice,
-                        mSerialPortBaudrate);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            mMicArrayLEDControlHelper = MicArrayLEDControlHelper.create(
-                    mMicArrayControlVT6751);
-        }
-
-        //
-        // * Check and load OLAMI developer's APP KEY and APP SECRET information.
-        // ----------------------------------------------------------------------------------
-        // You can :
-        // 1. directly replace your APP KEY and APP SECRET into VoiceAssistantConfig.java,
-        // 2. or put them into a text file on the path: /sdcard/olami-app-key.txt
-        //
-        // The 'olami-app-key.txt' content example:
-        // locale=tw|cn
-        // app-key=your-app-key
-        // app-secret=your-app-secret
-        //
-        // e.g. (LOCALIZE_OPTION_TRADITIONAL_CHINESE):
-        // locale=tw
-        // app-key=123456789
-        // app-secret=123456789
-        //
-        // e.g. (LOCALIZE_OPTION_SIMPLIFIED_CHINESE):
-        // locale=cn
-        // app-key=123456789
-        // app-secret=123456789
-        //
-        while (true) {
-            boolean hasAppKey = VoiceAssistantConfig.readOlamiAppKey();
-            if (hasAppKey) {
-                // Set locale by localize option.
-                if (VoiceAssistantConfig.getLocalizeOption() == APIConfiguration
-                        .LOCALIZE_OPTION_TRADITIONAL_CHINESE) {
-                    switchLocale("taiwan");
-                } else if (VoiceAssistantConfig.getLocalizeOption() == APIConfiguration
-                        .LOCALIZE_OPTION_SIMPLIFIED_CHINESE) {
-                    switchLocale("china");
-                }
-
-                break;
-            } else {
-                String TTSStr = getString(R.string.GetAppKeyFail);
-                mTtsPlayer.playText(TTSStr, false);
-                Log.i(TAG, TTSStr);
-
-                if (mMicArrayLEDControlHelper != null) {
-                    mMicArrayLEDControlHelper.changeLEDState(
-                            MicArrayLEDControlHelper.VoiceRecognitionState.ERROR);
-                }
-
-                sleep(15000);
-            }
-        }
-
-        setContentView(R.layout.activity_speech_input_keeprecording);
-        getSupportActionBar().hide();
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-
-        mOlamiLogo = (ImageView) findViewById(R.id.olamiLogo);
-        mSTTText = (TextView) findViewById(R.id.sttResult);
-        mTTSValue = (TextView) findViewById(R.id.ttsValue);
-        mOlamiLogo = (ImageView) findViewById(R.id.olamiLogo);
-        mWhatCanOLAMIDo = (TextView) findViewById(R.id.whatCanOLAMIDo);
-
-        //
-        // * Set Chinese fonts by localize option.
-        //   --------------------------------------------------------------------------------------
-        //   AndroidThings platform does not support Chinese fonts, so we need to do this manually.
-        //
-        //   You may not need to do this step in the normal Android platform.
-        //
-        Typeface customFont = null;
-        if (VoiceAssistantConfig.getLocalizeOption() == APIConfiguration
-                .LOCALIZE_OPTION_TRADITIONAL_CHINESE) {
-            customFont = Typeface.createFromAsset(getAssets(),  "NotoSansTC-Light.otf");
-        } else if (VoiceAssistantConfig.getLocalizeOption() == APIConfiguration
-                .LOCALIZE_OPTION_SIMPLIFIED_CHINESE) {
-            customFont = Typeface.createFromAsset(getAssets(),  "NotoSansCJKsc-Light.otf");
-        }
-        mSTTText.setTypeface(customFont);
-        mTTSValue.setTypeface(customFont);
-        mWhatCanOLAMIDo.setTypeface(customFont);
-
-        mOlamiLogo.setOnClickListener(new recordButtonListener());
     }
 
     @Override
@@ -246,6 +142,113 @@ public class VoiceAssistantActivity extends AppCompatActivity {
 
         Log.i(TAG, "checkPermission = "+ checkDeviceResourcePermissions());
         if (checkDeviceResourcePermissions()) {
+
+            mContext = VoiceAssistantActivity.this.getApplicationContext();
+
+            // Initial TTS player
+            if (mTtsPlayer == null) {
+                mTtsListener = new TtsPlayerListener();
+                mTtsPlayer = new TtsPlayer(mContext, mTtsListener);
+                mTtsPlayer.setSpeed(1.1f);
+                mTtsPlayer.setVolume(100);
+            }
+
+            // Initial microphone array helper
+            if (mMicArrayLEDControlHelper == null) {
+                try {
+                    mMicArrayControlVT6751 = MicArrayControlVT6751.create(
+                            new MicArrayVT6751Listener(),
+                            mContext,
+                            mSerialPortDevice,
+                            mSerialPortBaudrate);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                mMicArrayLEDControlHelper = MicArrayLEDControlHelper.create(
+                        mMicArrayControlVT6751);
+            }
+
+            //
+            // * Check and load OLAMI developer's APP KEY and APP SECRET information.
+            // ----------------------------------------------------------------------------------
+            // You can :
+            // 1. directly replace your APP KEY and APP SECRET into VoiceAssistantConfig.java,
+            // 2. or put them into a text file on the path: /sdcard/olami-app-key.txt
+            //
+            // The 'olami-app-key.txt' content example:
+            // locale=tw|cn
+            // app-key=your-app-key
+            // app-secret=your-app-secret
+            //
+            // e.g. (LOCALIZE_OPTION_TRADITIONAL_CHINESE):
+            // locale=tw
+            // app-key=123456789
+            // app-secret=123456789
+            //
+            // e.g. (LOCALIZE_OPTION_SIMPLIFIED_CHINESE):
+            // locale=cn
+            // app-key=123456789
+            // app-secret=123456789
+            //
+            while (true) {
+                boolean hasAppKey = VoiceAssistantConfig.readOlamiAppKey();
+                if (hasAppKey) {
+                    // Set locale by localize option.
+                    if (VoiceAssistantConfig.getLocalizeOption() == APIConfiguration
+                            .LOCALIZE_OPTION_TRADITIONAL_CHINESE) {
+                        switchLocale("taiwan");
+                    } else if (VoiceAssistantConfig.getLocalizeOption() == APIConfiguration
+                            .LOCALIZE_OPTION_SIMPLIFIED_CHINESE) {
+                        switchLocale("china");
+                    }
+
+                    break;
+                } else {
+                    String TTSStr = getString(R.string.GetAppKeyFail);
+                    mTtsPlayer.playText(TTSStr, false);
+                    Log.i(TAG, TTSStr);
+
+                    if (mMicArrayLEDControlHelper != null) {
+                        mMicArrayLEDControlHelper.changeLEDState(
+                                MicArrayLEDControlHelper.VoiceRecognitionState.ERROR);
+                    }
+
+                    sleep(15000);
+                }
+            }
+
+            setContentView(R.layout.activity_speech_input_keeprecording);
+            getSupportActionBar().hide();
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+
+            mOlamiLogo = (ImageView) findViewById(R.id.olamiLogo);
+            mSTTText = (TextView) findViewById(R.id.sttResult);
+            mTTSValue = (TextView) findViewById(R.id.ttsValue);
+            mOlamiLogo = (ImageView) findViewById(R.id.olamiLogo);
+            mWhatCanOLAMIDo = (TextView) findViewById(R.id.whatCanOLAMIDo);
+
+            //
+            // * Set Chinese fonts by localize option.
+            //   --------------------------------------------------------------------------------------
+            //   AndroidThings platform does not support Chinese fonts, so we need to do this manually.
+            //
+            //   You may not need to do this step in the normal Android platform.
+            //
+            Typeface customFont = null;
+            if (VoiceAssistantConfig.getLocalizeOption() == APIConfiguration
+                    .LOCALIZE_OPTION_TRADITIONAL_CHINESE) {
+                customFont = Typeface.createFromAsset(getAssets(), "NotoSansTC-Light.otf");
+            } else if (VoiceAssistantConfig.getLocalizeOption() == APIConfiguration
+                    .LOCALIZE_OPTION_SIMPLIFIED_CHINESE) {
+                customFont = Typeface.createFromAsset(getAssets(), "NotoSansCJKsc-Light.otf");
+            }
+            mSTTText.setTypeface(customFont);
+            mTTSValue.setTypeface(customFont);
+            mWhatCanOLAMIDo.setTypeface(customFont);
+
+            mOlamiLogo.setOnClickListener(new recordButtonListener());
+
             init();
         }
     }
@@ -353,7 +356,7 @@ public class VoiceAssistantActivity extends AppCompatActivity {
                         mRecognizer.setSpeechUploadLength(300);
                         // * You can set the timeout of each recognize process (begin-to-end).
                         //   The recognize process will be cancelled if timeout and reset the state.
-                        mRecognizer.setRecognizerTimeout(5000);
+                        mRecognizer.setRecognizerTimeout(10000);
                         // ------------------------------------------------------------------
 
                         mRecognizer.startRecording();
@@ -418,7 +421,6 @@ public class VoiceAssistantActivity extends AppCompatActivity {
      */
     private void startRecognize() {
         if (mRecognizer != null && mHotwordDetect != null) {
-
             TTSChangeHandler(getString(R.string.canIHelpYou));
             STTChangeHandler("");
 
@@ -437,9 +439,9 @@ public class VoiceAssistantActivity extends AppCompatActivity {
 
             // * Check to see if speech recognition has been stopped, then we can do next run.
             if (mRecognizeState == KeepRecordingSpeechRecognizer.RecognizeState.STOPPED) {
-                mHotwordDetect.stopDetection();
                 // * Request to start voice recording and recognition.
                 try {
+                    mHotwordDetect.stopDetection();
                     mRecognizer.startRecognizing();
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
@@ -809,14 +811,14 @@ public class VoiceAssistantActivity extends AppCompatActivity {
     }
 
     private void OlamiLogoChangeHandler(final OlamiLogoAnimationState state) {
-        if (mOlamiLogoAnimation != null) {
-            if (mOlamiLogoAnimation.isRunning()) {
-                mOlamiLogoAnimation.stop();
-            }
-        }
-
         new Handler(this.getMainLooper()).post(new Runnable(){
             public void run(){
+                if (mOlamiLogoAnimation != null) {
+                    if (mOlamiLogoAnimation.isRunning()) {
+                        mOlamiLogoAnimation.stop();
+                    }
+                }
+
                 if (state == OlamiLogoAnimationState.BOOTING) {
                     mOlamiLogo.setBackgroundResource(R.drawable.olami_booting);
                 } else if (state == OlamiLogoAnimationState.WAITING) {

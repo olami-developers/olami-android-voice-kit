@@ -29,6 +29,8 @@ import ai.olami.cloudService.APIConfiguration;
 
 public class VoiceAssistantConfig {
 
+    public final static String TAG = "OlamiConfig";
+
     public static String mSdcardPath = Environment.getExternalStorageDirectory() +"/";
 
     // * Setting localize option
@@ -71,14 +73,22 @@ public class VoiceAssistantConfig {
         try {
             bufferedReader = new BufferedReader(new FileReader(mSdcardPath + keyFileName));
             String line = null;
+            String keyStr = null;
+            String valStr = null;
             while ((line = bufferedReader.readLine()) != null) {
-                String str[] = line.toLowerCase().replaceAll(" ","").split("=");
-                if (str[0].equals("app-key")) {
-                    setAppKey(str[1]);
-                } else if (str[0].equals("app-secret")) {
-                    setAppSecret(str[1]);
-                } else if (str[0].equals("locale")) {
-                    switch (str[1]) {
+                String str[] = line.split("=");
+                if (str.length < 2) {
+                    continue;
+                }
+
+                keyStr = str[0].toLowerCase().replaceAll(" ","");
+                valStr = str[1];
+                if (keyStr.equals("app-key")) {
+                    setAppKey(valStr);
+                } else if (keyStr.equals("app-secret")) {
+                    setAppSecret(valStr);
+                } else if (keyStr.equals("locale")) {
+                    switch (valStr.toLowerCase().replaceAll(" ","")) {
                         case "tw":
                             setLocalizeOption(APIConfiguration.LOCALIZE_OPTION_TRADITIONAL_CHINESE);
                             break;
@@ -92,7 +102,8 @@ public class VoiceAssistantConfig {
                 }
             }
         } catch (IOException e) {
-            Log.i("Config", "Can not read file："+ mSdcardPath + keyFileName);
+            Log.e(TAG, "Can not read file: "+ mSdcardPath + keyFileName + "\n" + e.toString());
+            e.printStackTrace();
             return false;
         } finally {
             try {

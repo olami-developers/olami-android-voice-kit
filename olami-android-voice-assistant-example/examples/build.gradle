@@ -59,7 +59,6 @@ dependencies {
     compile group: 'commons-net', name: 'commons-net', version: '3.3'
 
     // * OLAMI HTTP Client SDKs
-    compile 'ai.olami:olami-java-client:1.1.1'
     compile 'ai.olami:olami-android-client:2.3.0'
     // * OLAMI SDKs and Voice-Kit libraries
     compile project(':olami-android-hotword-detect-1.0.0.beta3')

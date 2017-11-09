@@ -16,12 +16,13 @@
 
         <ImageView
             android:id="@+id/olamiLogo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_width="175px"
+            android:layout_height="162px"
+            android:layout_above="@+id/whatCanOLAMIDo"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="100dp"
-            android:layout_marginRight="100dp" />
+            android:layout_marginBottom="100px"
+            android:layout_marginEnd="100px"
+            android:background="@mipmap/booting_7" />
 
         <TextView
             android:id="@+id/sttResult"
@@ -29,20 +30,20 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:layout_marginEnd="400dp"
-            android:layout_marginTop="150dp"
+            android:layout_marginEnd="200px"
+            android:layout_marginTop="100px"
             android:textColor="#9f9f9f"
-            android:textSize="55sp" />
+            android:textSize="55px" />
 
         <TextView
             android:id="@+id/ttsValue"
             android:layout_width="1000dp"
             android:layout_height="400dp"
-            android:layout_marginLeft="200dp"
-            android:layout_marginTop="350dp"
+            android:layout_marginLeft="100px"
+            android:layout_marginTop="300px"
             android:text="@string/HelloIAmOlami"
             android:textColor="@android:color/white"
-            android:textSize="50sp" />
+            android:textSize="50px" />
 
         <TextView
             android:id="@+id/whatCanOLAMIDo"
@@ -50,11 +51,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="100dp"
-            android:layout_marginLeft="200dp"
+            android:layout_marginBottom="50px"
+            android:layout_marginLeft="100px"
             android:text="@string/WhatCanOLAMIDo"
             android:textColor="#9f9f9f"
-            android:textSize="16sp" />
+            android:textSize="16px" />
     </RelativeLayout>
 
 </LinearLayout>
