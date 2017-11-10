@@ -426,9 +426,6 @@ public class VoiceAssistantActivity extends AppCompatActivity {
 
             OlamiLogoChangeHandler(OlamiLogoAnimationState.WAKEUP_WAITING_TO_TALK);
 
-            // * Play TTS when hotword has been detected.
-            mTtsPlayer.playText("是", false);
-
             if (mMicArrayLEDControlHelper != null) {
                 mMicArrayLEDControlHelper.changeLEDState(
                         MicArrayLEDControlHelper.VoiceRecognitionState.PROCESSING);
@@ -565,6 +562,15 @@ public class VoiceAssistantActivity extends AppCompatActivity {
          */
         @Override
         public void onHotwordDetect(int hotwordID) {
+
+            // * Play TTS when hotword has been detected. (Optional)
+            //   ---------------------------------------------------------------------------------
+            //   You should disable this if you are not using the AEC (Acoustic Echo Cancelling)
+            //   enabled device.
+            //   Otherwise, the awakened response (TTS) will be also recognized as speech input.
+            mTtsPlayer.playText("是", false);
+
+            // * Start speech recognizing.
             startRecognize();
         }
     }
