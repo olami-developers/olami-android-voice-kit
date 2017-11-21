@@ -9,7 +9,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 25
         versionCode 1
-        versionName "20170707"
+        versionName "20171121"
 
         archivesBaseName = "olami-android-voice-assistant-examples"
 
@@ -59,7 +59,7 @@ dependencies {
     compile group: 'commons-net', name: 'commons-net', version: '3.3'
 
     // * OLAMI HTTP Client SDKs
-    compile 'ai.olami:olami-android-client:2.3.1'
+    compile 'ai.olami:olami-android-client:2.3.2'
     // * OLAMI SDKs and Voice-Kit libraries
     compile project(':olami-android-hotword-detect-1.0.0.beta4')
     compile project(':olami-android-tts-1.0.0.120')
