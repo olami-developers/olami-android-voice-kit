@@ -8,8 +8,8 @@ android {
         applicationId "ai.olami.android.sample.voiceAssistant"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 1
-        versionName "20171121"
+        versionCode 3
+        versionName "20171125"
 
         archivesBaseName = "olami-android-voice-assistant-examples"
 

@@ -19,6 +19,7 @@
 package ai.olami.android.example;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -141,8 +142,10 @@ public class VoiceAssistantActivity extends AppCompatActivity {
         super.onResume();
 
         Log.i(TAG, "checkPermission = "+ checkDeviceResourcePermissions());
-        if (checkDeviceResourcePermissions()) {
+        int orientation = getResources().getConfiguration().orientation;
+        Log.i(TAG, "orientation = "+ orientation);
 
+        if (checkDeviceResourcePermissions() && orientation == 2) {
             mContext = VoiceAssistantActivity.this.getApplicationContext();
 
             // Initial TTS player
@@ -151,6 +154,7 @@ public class VoiceAssistantActivity extends AppCompatActivity {
                 mTtsPlayer = new TtsPlayer(mContext, mTtsListener);
                 mTtsPlayer.setSpeed(1.1f);
                 mTtsPlayer.setVolume(100);
+
             }
 
             // Initial microphone array helper
@@ -260,21 +264,10 @@ public class VoiceAssistantActivity extends AppCompatActivity {
         release();
     }
 
-    protected class recordButtonListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            if (!mIsSleepMode) {
-                startRecognize();
-            }
-        }
-    }
-
     /**
      * Release all resources
      */
     private void release() {
-        cancelRecognize();
-
         if (mHotwordDetect != null) {
             mHotwordDetect.stopDetection();
             mHotwordDetect.release();
@@ -282,8 +275,20 @@ public class VoiceAssistantActivity extends AppCompatActivity {
         }
 
         if (mRecognizer != null) {
-            // * Release the recognizer when program stops or exits.
-            mRecognizer.stopRecordingAndReleaseResources();
+            // Get current voice recording state.
+            mRecognizeState = mRecognizer.getRecognizeState();
+            // * Check to see if speech recognition has been stopped, then we can do next run.
+            if (mRecognizeState != KeepRecordingSpeechRecognizer.RecognizeState.STOPPED) {
+                mRecognizer.cancelRecognizing();
+            }
+
+            if (mAudioRecord != null) {
+                if (mAudioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
+                    mRecognizer.stopRecordingAndReleaseResources();
+                    mAudioRecord = null;
+                }
+            }
+
             mRecognizer = null;
         }
 
@@ -298,6 +303,7 @@ public class VoiceAssistantActivity extends AppCompatActivity {
         }
 
         if (mTtsPlayer != null) {
+            mTtsPlayer.stop(false);
             mTtsPlayer.destroy();
             mTtsPlayer = null;
         }
@@ -378,6 +384,13 @@ public class VoiceAssistantActivity extends AppCompatActivity {
      */
     private void initializeHotwordDetection() {
 
+        if (mAudioRecord != null) {
+            if (mAudioRecord.getState() == AudioRecord.STATE_UNINITIALIZED) {
+                mRecognizer.stopRecordingAndReleaseResources();
+                mAudioRecord = null;
+            }
+        }
+
         if (mAudioRecord == null) {
             mAudioRecord = mRecognizer.getAudioRecord();
         }
@@ -409,9 +422,6 @@ public class VoiceAssistantActivity extends AppCompatActivity {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-        } else {
-            initializeHotwordDetection();
-            startHotwordDetection();
         }
     }
 
@@ -508,6 +518,15 @@ public class VoiceAssistantActivity extends AppCompatActivity {
             mIsSleepMode = false;
 
             startHotwordDetection();
+        }
+    }
+
+    protected class recordButtonListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            if (!mIsSleepMode) {
+                startRecognize();
+            }
         }
     }
 
@@ -616,7 +635,24 @@ public class VoiceAssistantActivity extends AppCompatActivity {
 
             // In this example, we used button C to manually cancel the speech recognition.
             if (!mIsSleepMode) {
-                cancelRecognize();
+
+                // Get current voice recording state.
+                mRecognizeState = mRecognizer.getRecognizeState();
+
+                if (mRecognizeState != KeepRecordingSpeechRecognizer.RecognizeState.STOPPED) {
+                    cancelRecognize();
+                }
+
+                if (mIsPlayTTS) {
+                    mTtsPlayer.stop(true);
+
+                    if (mMicArrayLEDControlHelper != null) {
+                        mMicArrayLEDControlHelper.changeLEDState(
+                                MicArrayLEDControlHelper.VoiceRecognitionState.WAITING);
+                    }
+
+                    OlamiLogoChangeHandler(OlamiLogoAnimationState.WAITING);
+                }
             }
         }
 
