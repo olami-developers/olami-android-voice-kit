@@ -153,7 +153,7 @@ public class VoiceAssistantActivity extends AppCompatActivity {
                 mTtsListener = new TtsPlayerListener();
                 mTtsPlayer = new TtsPlayer(mContext, mTtsListener);
                 mTtsPlayer.setSpeed(1.1f);
-                mTtsPlayer.setVolume(100);
+                mTtsPlayer.setVolume(300);
 
             }
 
