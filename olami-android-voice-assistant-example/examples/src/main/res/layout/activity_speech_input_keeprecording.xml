@@ -49,11 +49,20 @@
             android:id="@+id/whatCanOLAMIDo"
             android:layout_width="1000dp"
             android:layout_height="wrap_content"
+            android:layout_above="@+id/volume"
+            android:layout_alignStart="@+id/volume"
+            android:text="@string/WhatCanOLAMIDo"
+            android:textColor="#9f9f9f"
+            android:textSize="16px" />
+        <TextView
+            android:id="@+id/volume"
+            android:layout_width="1000dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="50px"
+            android:layout_marginBottom="25px"
             android:layout_marginLeft="100px"
-            android:text="@string/WhatCanOLAMIDo"
+            android:text="音量：0"
             android:textColor="#9f9f9f"
             android:textSize="16px" />
     </RelativeLayout>

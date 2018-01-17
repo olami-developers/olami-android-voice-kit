@@ -19,7 +19,9 @@
 package ai.olami.android.example;
 
 import android.Manifest;
-import android.app.Activity;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -36,6 +38,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -90,9 +93,17 @@ public class VoiceAssistantActivity extends AppCompatActivity {
     private TextView mSTTText;
     private TextView mTTSValue;
     private TextView mWhatCanOLAMIDo;
+    private TextView mVolume;
 
     ImageView mOlamiLogo = null;
     AnimationDrawable mOlamiLogoAnimation;
+
+    private final int mActionClickBetweenTime = 300;
+    private int mActionClickCount = 0;
+    private long mActionBeforeClickTime = 0;
+    private Handler mActionClickHandler = new Handler();
+    private boolean mActionClickFlag = false;
+    private SettingDialogFragment mSettingDialog;
 
     private boolean mIsPlayTTS = false;
     private boolean mIsSleepMode = false;
@@ -153,7 +164,7 @@ public class VoiceAssistantActivity extends AppCompatActivity {
                 mTtsListener = new TtsPlayerListener();
                 mTtsPlayer = new TtsPlayer(mContext, mTtsListener);
                 mTtsPlayer.setSpeed(1.1f);
-                mTtsPlayer.setVolume(100);
+                mTtsPlayer.setVolume(300);
 
             }
 
@@ -231,6 +242,7 @@ public class VoiceAssistantActivity extends AppCompatActivity {
             mTTSValue = (TextView) findViewById(R.id.ttsValue);
             mOlamiLogo = (ImageView) findViewById(R.id.olamiLogo);
             mWhatCanOLAMIDo = (TextView) findViewById(R.id.whatCanOLAMIDo);
+            mVolume = (TextView) findViewById(R.id.volume);
 
             //
             // * Set Chinese fonts by localize option.
@@ -329,6 +341,8 @@ public class VoiceAssistantActivity extends AppCompatActivity {
                         VoiceAssistantConfig.getLocalizeOption()
                 );
 
+                VoiceAssistantConfig.readEnvironmentFile();
+
                 try {
                     // * Step 3: Create the microphone recording speech recognizer.
                     //           ----------------------------------------------------------
@@ -338,12 +352,17 @@ public class VoiceAssistantActivity extends AppCompatActivity {
                     if (mRecognizer == null) {
                         mRecognizer = KeepRecordingSpeechRecognizer.create(
                                 new KeepRecordingSpeechRecognizerListener(),
-                                config);
+                                config
+                        );
 
-                        // * Optional steps: Setup some other configurations.
+                        // * Optional step: Setup the recognize result type of your request.
+                        //                  The default setting is RECOGNIZE_RESULT_TYPE_STT for Speech-To-Text.
+                        mRecognizer.setRecognizeResultType(KeepRecordingSpeechRecognizer.RECOGNIZE_RESULT_TYPE_ALL);
+
+                        // * Other optional steps: Setup some other configurations.
                         //                   You can use default settings without bellow steps.
-                        mRecognizer.setEndUserIdentifier("Someone");
-                        mRecognizer.setApiRequestTimeout(3000);
+                        mRecognizer.setEndUserIdentifier(VoiceAssistantConfig.getEndUserIdentifier());
+                        mRecognizer.setApiRequestTimeout(VoiceAssistantConfig.getApiRequestTimeout());
 
                         // * Advanced setting example.
                         //   These are also optional steps, so you can skip these
@@ -351,19 +370,27 @@ public class VoiceAssistantActivity extends AppCompatActivity {
                         // ------------------------------------------------------------------
                         // * You can set the length of end time of the VAD in milliseconds
                         //   to stop voice recording automatically.
-                        mRecognizer.setLengthOfVADEnd(2500);
+                        mRecognizer.setLengthOfVADEnd(VoiceAssistantConfig.getLengthOfVADEnd());
                         // * You can set the frequency in milliseconds of the recognition
                         //   result query, then the recognizer client will query the result
                         //   once every milliseconds you set.
-                        mRecognizer.setResultQueryFrequency(300);
+                        mRecognizer.setResultQueryFrequency(VoiceAssistantConfig.getResultQueryFrequency());
                         // * You can set audio length in milliseconds to upload, then
                         //   the recognizer client will upload parts of audio once every
                         //   milliseconds you set.
-                        mRecognizer.setSpeechUploadLength(300);
+                        mRecognizer.setSpeechUploadLength(VoiceAssistantConfig.getSpeechUploadLength());
                         // * You can set the timeout of each recognize process (begin-to-end).
                         //   The recognize process will be cancelled if timeout and reset the state.
-                        mRecognizer.setRecognizerTimeout(10000);
+                        mRecognizer.setRecognizerTimeout(VoiceAssistantConfig.getRecognizerTimeout());
                         // ------------------------------------------------------------------
+
+                        mSettingDialog = SettingDialogFragment.newInstance();
+                        mSettingDialog.setting(VoiceAssistantActivity.this, mRecognizer);
+                        Fragment prev = getFragmentManager().findFragmentByTag("olami");
+                        if (prev != null) {
+                            DialogFragment df = (DialogFragment) prev;
+                            df.dismiss();
+                        }
 
                         mRecognizer.startRecording();
                     }
@@ -433,6 +460,7 @@ public class VoiceAssistantActivity extends AppCompatActivity {
         if (mRecognizer != null && mHotwordDetect != null) {
             TTSChangeHandler(getString(R.string.canIHelpYou));
             STTChangeHandler("");
+            mTtsPlayer.stop(false);
 
             OlamiLogoChangeHandler(OlamiLogoAnimationState.WAKEUP_WAITING_TO_TALK);
 
@@ -450,6 +478,16 @@ public class VoiceAssistantActivity extends AppCompatActivity {
                 try {
                     mHotwordDetect.stopDetection();
                     mRecognizer.startRecognizing();
+                    //
+                    // You can also send text with NLIConfig to append "nli_config" JSON object.
+                    //
+                    // For Example, try to replace 'start()' with the following sample code:
+                    // ===================================================================
+                    // NLIConfig nliConfig = new NLIConfig();
+                    // nliConfig.setSlotName("myslot");
+                    // mRecognizer.startRecognizing(nliConfig);
+                    // ===================================================================
+                    //
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
@@ -528,6 +566,43 @@ public class VoiceAssistantActivity extends AppCompatActivity {
                 startRecognize();
             }
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        long now = System.currentTimeMillis();
+
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (now - mActionBeforeClickTime > mActionClickBetweenTime) {
+                mActionClickCount = 1;
+            } else {
+                mActionClickCount++;
+            }
+
+            if (!mActionClickFlag) {
+                mActionClickFlag = true;
+                mActionClickHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mActionClickCount == 2) { // 按二下開啟設定頁面
+                            mSettingDialog.show(VoiceAssistantActivity.this.getFragmentManager(), "olami");
+                        } else if (mActionClickCount == 3) {  //按三下螢幕，開啟系統設定
+                            startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS), 0);
+                        } else if (mActionClickCount == 4) {  //按四下螢幕，開啟桌面
+                            Intent home = new Intent(Intent.ACTION_MAIN);
+                            home.addCategory(Intent.CATEGORY_HOME);
+                            startActivity(home);
+                        }
+                        mActionClickFlag = false;
+                    }
+                }, mActionClickBetweenTime * 3);
+            }
+
+            mActionBeforeClickTime = now;
+        }
+
+        // TODO Auto-generated method stub
+        return super.onTouchEvent(event);
     }
 
     private class HotwordDetectListener implements IHotwordDetectListener {
@@ -848,6 +923,9 @@ public class VoiceAssistantActivity extends AppCompatActivity {
                 if (volume >= 1) {
                     OlamiLogoChangeHandler(OlamiLogoAnimationState.LISTENING);
                 }
+
+                mVolume.setText("音量："+ volume);
+
             }
         });
     }

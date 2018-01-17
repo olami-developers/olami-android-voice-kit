@@ -308,7 +308,6 @@ public class DumpIDSDataExample {
                         dataArray.get(x).isFavorite() ? "YES" : "NO");
 
                 description = nliResult.getDescObject().getReplyAnswer();
-                description += "，目前股價為"+ dataArray.get(x).getCurrentPrice() +"元";
             }
         }
 
