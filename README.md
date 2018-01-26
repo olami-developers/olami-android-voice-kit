@@ -13,3 +13,8 @@ OLAMI website and documentation: [http://olami.ai](http://olami.ai)
 - [繁體中文線上說明 - 安装指南 (標準 Android 手機)](https://tw.olami.ai/blog/article/52)
 - [繁體中文線上說明 - 程式碼解說](https://tw.olami.ai/school/article/66)
 
+* * *
+
+### OLAMI OSL (NLP model design) examples
+
+See Repository : [olami-osl-examples](https://github.com/olami-developers/olami-osl-examples)
