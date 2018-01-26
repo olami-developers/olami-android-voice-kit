@@ -34,62 +34,7 @@ public class VoiceAssistantConfig {
     public final static String TAG = "OlamiConfig";
 
     public static String mSdcardPath = Environment.getExternalStorageDirectory() +"/";
-
-    private static int mSilenceLevelOfVadTail = 5;
-    public static void setSilenceLevelOfVadTail(int silence) {
-        mSilenceLevelOfVadTail = silence;
-    }
-    public static int getSilenceLevelOfVadTail() {
-        return mSilenceLevelOfVadTail;
-    }
-
-    private static int mRecognizerTimeout = 10000;
-    public static void setRecognizerTimeout(int timeout) {
-        mRecognizerTimeout = timeout;
-    }
-    public static int getRecognizerTimeout() {
-        return mRecognizerTimeout;
-    }
-
-    private static int mLengthOfVADEnd = 2500;
-    public static void setLengthOfVADEnd(int length) {
-        mLengthOfVADEnd = length;
-    }
-    public static int getLengthOfVADEnd() {
-        return mLengthOfVADEnd;
-    }
-
-    private static int mSpeechUploadLength = 300;
-    public static void setSpeechUploadLength(int length) {
-        mSpeechUploadLength = length;
-    }
-    public static int getSpeechUploadLength() {
-        return mSpeechUploadLength;
-    }
-
-    private static int mApiRequestTimeout = 3000;
-    public static void setApiRequestTimeout(int timeout) {
-        mApiRequestTimeout = timeout;
-    }
-    public static int getApiRequestTimeout() {
-        return mApiRequestTimeout;
-    }
-
-    private static int mResultQueryFrequency = 300;
-    public static void setResultQueryFrequency(int frequency) {
-        mResultQueryFrequency = frequency;
-    }
-    public static int getResultQueryFrequency() {
-        return mResultQueryFrequency;
-    }
-
-    private static String mEndUserIdentifier = "Some";
-    public static void setEndUserIdentifier(String identifier) {
-        mEndUserIdentifier = identifier;
-    }
-    public static String getEndUserIdentifier() {
-        return mEndUserIdentifier;
-    }
+    public static String mRecognizerEnvFilePath = "olami-assistant.env";
 
     // * Setting localize option
     public static int SAMPLE_LOCALIZE_OPTION = APIConfiguration.LOCALIZE_OPTION_TRADITIONAL_CHINESE;
@@ -118,6 +63,63 @@ public class VoiceAssistantConfig {
     }
     public static int getLocalizeOption() {
         return mLocalizeOption;
+    }
+
+
+    private static int mSilenceLevelOfVadTail = 5;
+    public static void setSilenceLevelOfVadTail(int silence) {
+        mSilenceLevelOfVadTail = silence;
+    }
+    public static int getSilenceLevelOfVadTail() {
+        return mSilenceLevelOfVadTail;
+    }
+
+    private static int mRecognizerTimeout = 10000;
+    public static void setRecognizerTimeout(int timeout) {
+        mRecognizerTimeout = timeout;
+    }
+    public static int getRecognizerTimeout() {
+        return mRecognizerTimeout;
+    }
+
+    private static int mLengthOfVADEnd = 2000;
+    public static void setLengthOfVADEnd(int length) {
+        mLengthOfVADEnd = length;
+    }
+    public static int getLengthOfVADEnd() {
+        return mLengthOfVADEnd;
+    }
+
+    private static int mSpeechUploadLength = 300;
+    public static void setSpeechUploadLength(int length) {
+        mSpeechUploadLength = length;
+    }
+    public static int getSpeechUploadLength() {
+        return mSpeechUploadLength;
+    }
+
+    private static int mApiRequestTimeout = 3000;
+    public static void setApiRequestTimeout(int timeout) {
+        mApiRequestTimeout = timeout;
+    }
+    public static int getApiRequestTimeout() {
+        return mApiRequestTimeout;
+    }
+
+    private static int mResultQueryFrequency = 100;
+    public static void setResultQueryFrequency(int frequency) {
+        mResultQueryFrequency = frequency;
+    }
+    public static int getResultQueryFrequency() {
+        return mResultQueryFrequency;
+    }
+
+    private static String mEndUserIdentifier = "Some";
+    public static void setEndUserIdentifier(String identifier) {
+        mEndUserIdentifier = identifier;
+    }
+    public static String getEndUserIdentifier() {
+        return mEndUserIdentifier;
     }
 
     public static boolean readOlamiAppKey() {
@@ -176,30 +178,13 @@ public class VoiceAssistantConfig {
     }
 
     /*
-    * The 'olami-assistant.env' content example:
-    *
-    * # 設定使用者辨識碼
-    * EndUser_Identifier=Someone
-    * # 設定api伺服器請求的逾時時間，單位毫秒
-    * Api_Request_Timeout=3000
-    * # 設定自動停止錄音的結束時間，單位毫秒
-    * Length_Of_VAD_End=2500
-    * # 設定每次和伺服器請求的時間，單位毫秒
-    * Result_Query_Frequency=300
-    * # 設定每次上傳至伺服器，進行語音辨識的聲音長度，單位毫秒
-    * Speech_Upload_Length=300
-    * # 設定每次對話的逾時時間，單位毫秒
-    * Recognizer_Timeout=10000
-    * # 設定安靜音量的門檻值，單位音量大小
-    * Silence_Level_Of_VAD_Tail=5
-    *
+    * Read recognizer settings from config file 'olami-assistant.env'.
     * */
     public static void readEnvironmentFile() {
-       String envFilePath = "olami-assistant.env";
         BufferedReader bufferedReader = null;
 
         try {
-            bufferedReader = new BufferedReader(new FileReader(mSdcardPath + envFilePath));
+            bufferedReader = new BufferedReader(new FileReader(mSdcardPath + mRecognizerEnvFilePath));
             String line = null;
             String keyStr = null;
             String valStr = null;
@@ -237,8 +222,8 @@ public class VoiceAssistantConfig {
                 }
             }
         } catch (IOException e) {
-            Log.e(TAG, "Can not read file: "+ mSdcardPath + envFilePath);
-            Log.i(TAG, "Create file: "+ mSdcardPath + envFilePath);
+            Log.e(TAG, "Can not read file: "+ mSdcardPath + mRecognizerEnvFilePath);
+            Log.i(TAG, "Create file: "+ mSdcardPath + mRecognizerEnvFilePath);
             saveEnvironment();
         } finally {
             try {
@@ -251,28 +236,29 @@ public class VoiceAssistantConfig {
         }
     }
 
+    /*
+    * Save recognizer settings to config file 'olami-assistant.env'.
+    * */
     public static void saveEnvironment() {
-        String mSdcardPath = Environment.getExternalStorageDirectory() +"/";
-        String envFilePath = "olami-assistant.env";
-
-        String fileContent = "# 設定使用者辨識碼\n" +
-                "EndUser_Identifier="+ getEndUserIdentifier() +"\n" +
-                "# 設定api伺服器請求的逾時時間，單位毫秒\n" +
-                "Api_Request_Timeout="+ getApiRequestTimeout() +"\n" +
-                "# 設定自動停止錄音的結束時間，單位毫秒\n" +
-                "Length_Of_VAD_End="+ getLengthOfVADEnd() +"\n" +
-                "# 設定每次和伺服器請求的時間，單位毫秒\n" +
-                "Result_Query_Frequency="+ getResultQueryFrequency() +"\n" +
-                "# 設定每次上傳至伺服器，進行語音辨識的聲音長度，單位毫秒\n" +
-                "Speech_Upload_Length="+ getSpeechUploadLength() +"\n" +
-                "# 設定每次對話的逾時時間，單位毫秒\n" +
-                "Recognizer_Timeout="+ getRecognizerTimeout() +"\n" +
-                "# 設定安靜音量的門檻值，單位音量大小\n" +
-                "Silence_Level_Of_VAD_Tail="+ getSilenceLevelOfVadTail();
+        StringBuilder sb = new StringBuilder();
+        sb.append("# Set the identification to identify the End-user.\n");
+        sb.append("EndUser_Identifier=").append(getEndUserIdentifier()).append("\n");
+        sb.append("# Set timeout in milliseconds of each HTTP API request.\n");
+        sb.append("Api_Request_Timeout=").append(getApiRequestTimeout()).append("\n");
+        sb.append("# Set length of end time of the VAD in milliseconds to stop voice recording automatically.\n");
+        sb.append("Length_Of_VAD_End=").append(getLengthOfVADEnd()).append("\n");
+        sb.append("# Set the frequency in milliseconds of the recognition result query.\n");
+        sb.append("Result_Query_Frequency=").append(getResultQueryFrequency()).append("\n");
+        sb.append("# Set audio length in milliseconds to upload.\n");
+        sb.append("Speech_Upload_Length=").append(getSpeechUploadLength()).append("\n");
+        sb.append("# Set timeout in milliseconds of each recognize process (begin-to-end).\n");
+        sb.append("Recognizer_Timeout=").append(getRecognizerTimeout()).append("\n");
+        sb.append("# Set level of silence volume of the VAD to stop voice recording automatically.\n");
+        sb.append("Silence_Level_Of_VAD_Tail=").append(getSilenceLevelOfVadTail());
 
         try {
-            FileOutputStream fos = new FileOutputStream(mSdcardPath + envFilePath);
-            fos.write(fileContent.getBytes());
+            FileOutputStream fos = new FileOutputStream(mSdcardPath + mRecognizerEnvFilePath);
+            fos.write(sb.toString().getBytes());
             fos.close();
         } catch (IOException e) {
             e.printStackTrace();

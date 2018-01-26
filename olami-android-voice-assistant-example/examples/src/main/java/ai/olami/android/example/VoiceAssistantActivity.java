@@ -460,14 +460,6 @@ public class VoiceAssistantActivity extends AppCompatActivity {
         if (mRecognizer != null && mHotwordDetect != null) {
             TTSChangeHandler(getString(R.string.canIHelpYou));
             STTChangeHandler("");
-            mTtsPlayer.stop(false);
-
-            OlamiLogoChangeHandler(OlamiLogoAnimationState.WAKEUP_WAITING_TO_TALK);
-
-            if (mMicArrayLEDControlHelper != null) {
-                mMicArrayLEDControlHelper.changeLEDState(
-                        MicArrayLEDControlHelper.VoiceRecognitionState.PROCESSING);
-            }
 
             // Get current voice recording state.
             mRecognizeState = mRecognizer.getRecognizeState();
@@ -563,6 +555,8 @@ public class VoiceAssistantActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             if (!mIsSleepMode) {
+                mTtsPlayer.stop(false);
+                highlightOnWakeup(false);
                 startRecognize();
             }
         }
@@ -657,12 +651,7 @@ public class VoiceAssistantActivity extends AppCompatActivity {
         @Override
         public void onHotwordDetect(int hotwordID) {
 
-            // * Play TTS when hotword has been detected. (Optional)
-            //   ---------------------------------------------------------------------------------
-            //   You should disable this if you are not using the AEC (Acoustic Echo Cancelling)
-            //   enabled device.
-            //   Otherwise, the awakened response (TTS) will be also recognized as speech input.
-            mTtsPlayer.playText("是", false);
+            highlightOnWakeup(true);
 
             // * Start speech recognizing.
             startRecognize();
@@ -686,6 +675,8 @@ public class VoiceAssistantActivity extends AppCompatActivity {
             // In this example, we used button A to manually wake up the device
             // and start the speech recognition.
             if (!mIsSleepMode) {
+                mTtsPlayer.stop(false);
+                highlightOnWakeup(true);
                 startRecognize();
             }
         }
@@ -871,7 +862,9 @@ public class VoiceAssistantActivity extends AppCompatActivity {
                                 }
                             } else if (nliResults[i].hasDescObject()) {
                                 DescObject nliDescObj = nliResults[i].getDescObject();
-                                mTtsPlayer.playText(nliDescObj.getReplyAnswer(), true);
+                                if (!nliDescObj.getReplyAnswer().equals("")) {
+                                    mTtsPlayer.playText(nliDescObj.getReplyAnswer(), true);
+                                }
                             }
                         }
                     }
@@ -914,6 +907,26 @@ public class VoiceAssistantActivity extends AppCompatActivity {
         public void onException(Exception e) {
             e.printStackTrace();
             init();
+        }
+    }
+
+    private void highlightOnWakeup(boolean highlightByTTS) {
+        // Highlight by UI logo
+        OlamiLogoChangeHandler(OlamiLogoAnimationState.WAKEUP_WAITING_TO_TALK);
+
+        // Highlight by LED
+        if (mMicArrayLEDControlHelper != null) {
+            mMicArrayLEDControlHelper.changeLEDState(
+                    MicArrayLEDControlHelper.VoiceRecognitionState.PROCESSING);
+        }
+
+        // * Play TTS when hotword has been detected. (Optional)
+        //   ---------------------------------------------------------------------------------
+        //   You should disable this if you are not using the AEC (Acoustic Echo Cancelling)
+        //   enabled device.
+        //   Otherwise, the awakened response (TTS) will be also recognized as speech input.
+        if (highlightByTTS) {
+            mTtsPlayer.playText("是", false);
         }
     }
 

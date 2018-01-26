@@ -1,3 +1,21 @@
+/*
+	Copyright 2017, VIA Technologies, Inc. & OLAMI Team.
+
+	http://olami.ai
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+*/
+
 package ai.olami.android.example;
 
 import android.app.AlertDialog;
@@ -15,17 +33,17 @@ import android.widget.Toast;
 import ai.olami.android.KeepRecordingSpeechRecognizer;
 
 public class SettingDialogFragment extends DialogFragment {
-    static private SettingDialogFragment mSettingDialogFragment = null;
+    private static SettingDialogFragment mSettingDialogFragment = null;
 
-    View mSettingLayout;
+    private View mSettingLayout;
 
-    EditText mSilenceLevelOfVadTailEdit, mRecognizerTimeoutEdit, mLengthOfVADEndEdit;
-    EditText mSpeechUploadLengthEdit, mApiRequestTimeoutEdit, mResultQueryFrequencyEdit;
+    private EditText mSilenceLevelOfVadTailEdit, mRecognizerTimeoutEdit, mLengthOfVADEndEdit;
+    private EditText mSpeechUploadLengthEdit, mApiRequestTimeoutEdit, mResultQueryFrequencyEdit;
 
-    AppCompatActivity mActivity;
-    KeepRecordingSpeechRecognizer mRecognizer;
+    private AppCompatActivity mActivity;
+    private KeepRecordingSpeechRecognizer mRecognizer;
 
-    static SettingDialogFragment newInstance() {
+    public static SettingDialogFragment newInstance() {
         if (mSettingDialogFragment == null) {
             mSettingDialogFragment = new SettingDialogFragment();
         }
@@ -58,9 +76,9 @@ public class SettingDialogFragment extends DialogFragment {
         setValueHander(mResultQueryFrequencyEdit, VoiceAssistantConfig.getResultQueryFrequency() +"");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-        builder.setTitle("設定")
+        builder.setTitle("Settings")
                 .setView(mSettingLayout)
-                .setPositiveButton("儲存", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -86,8 +104,9 @@ public class SettingDialogFragment extends DialogFragment {
                         VoiceAssistantConfig.setResultQueryFrequency(resultQueryFrequency);
                         VoiceAssistantConfig.saveEnvironment();
 
-                        Toast.makeText(mActivity, "儲存成功！", Toast.LENGTH_SHORT).show();
-                        // 恢復全螢幕
+                        Toast.makeText(mActivity, "Saved.", Toast.LENGTH_SHORT).show();
+
+                        // Back to fullscreen.
                         mActivity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
                     }
                 });
@@ -97,18 +116,16 @@ public class SettingDialogFragment extends DialogFragment {
 
     @Override
     public void onDismiss(final DialogInterface dialog) {
-        // 恢復全螢幕
+        // Back to fullscreen.
         mActivity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
     @Override
     public void show(FragmentManager manager, String tag) {
         try {
-            //在每个add事务前增加一个remove事务，防止连续的add
             manager.beginTransaction().remove(this).commit();
             super.show(manager, tag);
         } catch (Exception e) {
-            //同一实例使用不同的tag会异常,这里捕获一下
             e.printStackTrace();
         }
     }

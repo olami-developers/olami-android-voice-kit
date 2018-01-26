@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('olami-android-tts-1.1.0.120.aar'))
