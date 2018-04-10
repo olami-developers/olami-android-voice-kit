@@ -1,1 +1,1 @@
-include ':examples', ':olami-android-tts-1.1.0.120', 'olami-android-hotword-detect-1.1.0', ':olami-android-vt6751-tool-1.0.0'
+include ':examples', ':olami-android-tts-1.1.0.120', 'olami-android-hotword-detect-1.1.1', ':olami-android-vt6751-tool-1.0.0'
