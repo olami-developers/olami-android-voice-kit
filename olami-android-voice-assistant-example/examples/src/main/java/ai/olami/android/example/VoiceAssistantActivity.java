@@ -833,6 +833,12 @@ public class VoiceAssistantActivity extends AppCompatActivity {
 
             try {
                 SpeechResult sttResult = response.getData().getSpeechResult();
+                // Recognition has not yet been completed.
+                // The text you get here is not a final mMusicPlayList.
+                if (sttResult.getStatus() == SpeechResult.STATUS_RECOGNIZE_OK) {
+                    STTChangeHandler(sttResult.getResult());
+                }
+
                 if (sttResult.complete()) {
                     // 'complete() == true' means returned text is final result.
                     // --------------------------------------------------
@@ -869,11 +875,7 @@ public class VoiceAssistantActivity extends AppCompatActivity {
                         }
                     }
                 } else {
-                    // Recognition has not yet been completed.
-                    // The text you get here is not a final result.
-                    if (sttResult.getStatus() == SpeechResult.STATUS_RECOGNIZE_OK) {
-                        STTChangeHandler(sttResult.getResult());
-                    }
+
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
