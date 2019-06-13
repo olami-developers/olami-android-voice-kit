@@ -37,7 +37,7 @@ public class VoiceAssistantConfig {
     public static String mRecognizerEnvFilePath = "olami-assistant.env";
 
     // * Replace your APP KEY with this variable.
-    private static String mAppKey = "*****your-app-key*****";
+    private static String mAppKey = "e536d09357e046b1849e7029ffb8c68b";
     public static void setAppKey(String appKey) {
         mAppKey = appKey;
     }
@@ -46,7 +46,7 @@ public class VoiceAssistantConfig {
     }
 
     // * Replace your APP SECRET with this variable.
-    private static String mAppSecret = "*****your-app-secret*****";
+    private static String mAppSecret = "1c34468b0e8f42e3b575cc7f56732e04";
     public static void setAppSecret(String appSecret) {
         mAppSecret = appSecret;
     }
